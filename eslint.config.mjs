@@ -1,15 +1,19 @@
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import eslintConfigPrettier from "eslint-config-prettier";
+import checkFile from "eslint-plugin-check-file";
+import n from "eslint-plugin-n";
 import {defineConfig, globalIgnores} from "eslint/config";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  prettier,
+  eslintConfigPrettier,
   globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
   {
     plugins: {
       "check-file": checkFile,
+      n: n,
     },
     rules: {
       "prefer-arrow-callback": ["error"],
@@ -17,12 +21,12 @@ const eslintConfig = defineConfig([
       semi: ["error"],
       quotes: ["error", "double"],
       "no-undef": ["warn"],
-      "no-unused-vars": ["warn"],
+      "n/no-process-env": ["error"],
 
       "check-file/filename-naming-convention": [
         "error",
         {
-          "**/*.{ts,tsx}": "KEBAB_CASE",
+          "**/*.{js,jsx,ts,tsx}": "KEBAB_CASE",
         },
         {
           ignoreMiddleExtensions: true,
@@ -31,7 +35,12 @@ const eslintConfig = defineConfig([
       "check-file/folder-naming-convention": [
         "error",
         {
-          "src/**/!(*)*": "KEBAB_CASE",
+          "src/**/!(*)*": "NEXT_JS_APP_ROUTER_CASE",
+        },
+        {
+          errorMessage:
+            // eslint-disable-next-line quotes
+            `The folder "{{ target }}" does not match the KEBAB_CASE pattern`,
         },
       ],
     },
